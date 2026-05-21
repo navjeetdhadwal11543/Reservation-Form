@@ -1,26 +1,355 @@
-@import "tailwindcss";
+/* ---- Page ---- */
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+.reservation-page {
+  background: #f4efeb;
+  min-height: 100vh;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/*--- Hero-Section */
+
+.reservation-hero {
+  height: 420px;
+  background-image: url('/images/restaurant.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.hero-overlay {
+  background: rgba(0, 0, 0, 0.55);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+.hero-overlay h1 {
+  font-size: clamp(30px, 4vw, 44px);
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.hero-overlay p {
+  font-size: clamp(14px, 2vw, 18px);
+  font-weight: 400;
+  opacity: 0.85;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+
+/* Form-Section*/
+
+.reservation-section {
+  margin-top: -140px;
+  padding-bottom: 100px;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.reservation-wrapper {
+  width: 100%;
+  max-width: 950px;
+  padding: 0 20px;
+}
+
+/* ------Form-Card */
+
+.reservation-card {
+  background: white;
+  padding: 50px;
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.1);
+}
+
+/* -------input-styling */
+
+.form-control,
+.form-select {
+  border-radius: 12px;
+  padding: 12px 14px;
+  border: 1px solid #e8e2dd;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #6f4f37;
+  box-shadow: 0 0 0 0.2rem rgba(111, 79, 55, 0.15);
+}
+
+/* ---------warning-box */
+
+.warning-box {
+  background: #fdecea;
+  color: #b02a37;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+/* ------phone----- */
+
+.phone-row {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.phone-prefix-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 52px;
+  padding: 0 12px;
+  border: 1px solid #e8e2dd;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.phone-prefix-box .react-tel-input {
+  width: auto !important;
+}
+
+.phone-prefix-box .flag-dropdown {
+  position: static !important;
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.dial-code-text {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.phone-number-wrapper {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  border: 1px solid #e8e2dd;
+  border-radius: 12px;
+  padding: 0 14px;
+  background: #fff;
+}
+
+.phone-number-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  background: transparent;
+}
+.phone-row:focus-within .phone-prefix-box,
+.phone-row:focus-within .phone-number-wrapper {
+  border-color: #6f4f37;
+  box-shadow: 0 0 0 0.2rem rgba(111, 79, 55, 0.15);
+}
+
+/* -------Button------- */
+
+.btn-orange {
+  background: linear-gradient(45deg, #6f4f37, #d2b48c);
+  color: white;
+  font-weight: 700;
+  border-radius: 25px;
+  padding: 14px 40px;
+  border: none;
+  font-size: 18px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  animation: pulsate 2s infinite;
+}
+
+.btn-orange:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(45deg, #5a3d2e, #d2b48c);
+}
+
+@keyframes pulsate {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 20px rgba(255, 215, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
   }
 }
+/* Container and Typography */
+.success-container {
+  text-align: center;
+  padding: 3rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.success-icon-circle {
+  width: 80px;
+  height: 80px;
+  background-color: #e6f4ea; /* Light green */
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.checkmark-icon {
+  font-size: 2.5rem;
+}
+
+.success-title {
+  font-weight: 700;
+  color: #212529;
+}
+
+.success-subtitle {
+  color: #6c757d;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+/* The Info Box (Orange Good Color) */
+.info-box {
+  background-color: #fff4e5; /* Very light orange */
+
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.info-title {
+  color: #6f4f37;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.info-text {
+  color: #333;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Methods Grid */
+.methods-grid {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.method-item {
+  text-align: center;
+}
+
+.method-item i {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.method-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #555;
+}
+
+/* Brand Colors */
+.whatsapp-color {
+  color: #25d366;
+}
+.telegram-color {
+  color: #0088cc;
+}
+.link-color {
+  color: #ff8c00;
+}
+
+.info-footer {
+  font-size: 0.9rem;
+  border-top: 1px solid rgba(255, 140, 0, 0.2);
+  padding-top: 1rem;
+  margin-top: 1rem;
+  font-weight: 500;
+}
+
+/* Button for coming back or reset the form */
+.btn-back {
+  background: transparent;
+  border: 2px solid #6c757d;
+  color: #6c757d;
+  padding: 0.6rem 2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-back:hover {
+  background-color: #6c757d;
+  color: #fff;
+}
+/*------Responsive for mobile as can we used on mobile as well */
+
+@media (max-width: 768px) {
+  .reservation-hero {
+    height: 300px; /* Smaller hero for mobile */
+  }
+
+  .reservation-section {
+    margin-top: -80px; /* Pull form up less on mobile */
+    padding-bottom: 50px;
+  }
+
+  .reservation-card {
+    padding: 25px; /* Less padding so form fields have more room */
+    border-radius: 15px;
+  }
+
+  /* Stack the columns */
+  .col-md-6.border-end {
+    border-right: none !important;
+    border-bottom: 1px solid #e8e2dd;
+    padding-right: 0 !important;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+  }
+
+  .col-md-6.ps-md-4 {
+    padding-left: 0 !important;
+  }
+
+  /* Make phone input stack if screen is very narrow */
+  .phone-row {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .phone-prefix-box {
+    width: 100%;
+    justify-content: center;
+  }
+}
+/* Add this to your global.css */
+.fade-in {
+  animation: fadeIn 0.4s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
