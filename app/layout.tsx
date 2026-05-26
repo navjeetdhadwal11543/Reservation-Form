@@ -1,5 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'react-phone-input-2/lib/style.css'
+import 'react-datepicker/dist/react-datepicker.css'
 
 import './globals.css'
 

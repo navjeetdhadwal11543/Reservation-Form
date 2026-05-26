@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import PhoneInput, { CountryData } from 'react-phone-input-2'
+import DatePicker from 'react-datepicker'
 
 import { Prenotazione, Location, Option } from '@/types/reservation'
 import {
@@ -53,8 +54,65 @@ export default function ReservationForm() {
       })
   }, [])
 
-  const getToday = () => new Date().toLocaleDateString('en-CA')
+  const getToday = () => {
+    const d = new Date()
+    const year = d.getFullYear()
+    const month = String(d.getMonth() + 1).padStart(2, '0')
+    const day = String(d.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
   const getEndOfYear = () => `${new Date().getFullYear()}-12-31`
+
+  //  Convert a Date object to a local "YYYY-MM-DD" string (no timezone shift)
+  const toISODate = (d: Date) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
+      d.getDate(),
+    ).padStart(2, '0')}`
+
+  //  Shared date-selection logic: guard past dates, then fetch available slots
+  const selectDate = (value: string) => {
+    if (value && value < getToday()) {
+      setError('La data non può essere nel passato.')
+      setForm((prev) => ({ ...prev, data: '', orario: '' }))
+      setAvailableTimes([])
+      return
+    }
+
+    setError(null)
+    setForm((prev) => ({ ...prev, data: value, orario: '' }))
+    setAvailableTimes([])
+
+    if (!value) return
+
+    //  Calculate day-of-week number from the date and ask the backend for slots
+    const [y, mo, d] = value.split('-').map(Number)
+    const dayNumber = new Date(y, mo - 1, d).getDay()
+
+    const fetchSlots = async () => {
+      try {
+        const times = await getAvailableSlots(dayNumber)
+        if (times.length === 0) {
+          setError(
+            'Nessun orario disponibile. Contattaci direttamente per prenotare.',
+          )
+        }
+        setAvailableTimes(times)
+      } catch (err) {
+        console.error('Failed to fetch slots:', err)
+        setError(
+          'Impossibile caricare gli orari. Contattaci direttamente per prenotare.',
+        )
+        setAvailableTimes([])
+      }
+    }
+
+    fetchSlots()
+  }
+
+  //  react-datepicker passes a Date object (or null when cleared)
+  const handleDateChange = (date: Date | null) => {
+    selectDate(date ? toISODate(date) : '')
+  }
 
   const isLargeGroup = form.numeroPosti > 9
 
@@ -90,39 +148,6 @@ export default function ReservationForm() {
       return
     }
 
-    //  FETCH SLOTS WHEN DATE CHANGES
-    if (name === 'data') {
-      setForm((prev) => ({ ...prev, data: value, orario: '' }))
-      setAvailableTimes([])
-
-      //  Calculate day number from date
-      const [y, mo, d] = value.split('-').map(Number)
-      const selectedDate = new Date(y, mo - 1, d)
-      const dayNumber = selectedDate.getDay()
-
-      //  Send day number to backend
-      const fetchSlots = async () => {
-        try {
-          const times = await getAvailableSlots(dayNumber)
-          if (times.length === 0) {
-            setError(
-              'Nessun orario disponibile. Contattaci direttamente per prenotare.',
-            )
-          }
-          setAvailableTimes(times)
-        } catch (err) {
-          console.error('Failed to fetch slots:', err)
-          setError(
-            'Impossibile caricare gli orari. Contattaci direttamente per prenotare.',
-          )
-          setAvailableTimes([])
-        }
-      }
-
-      fetchSlots()
-      return
-    }
-
     if (name === 'nome' || name === 'cognome') {
       if (!ONLY_LETTERS_REGEX.test(value)) return
     }
@@ -150,6 +175,8 @@ export default function ReservationForm() {
 
     if (!form.nome.trim()) return setError('Il nome è obbligatorio.')
     if (!form.data) return setError('Seleziona una data.')
+    if (form.data < getToday())
+      return setError('La data non può essere nel passato.')
     if (!form.orario) return setError('Seleziona un orario.')
     if (form.numeroPosti < 1) return setError('Seleziona almeno un coperto.')
     if (form.numeroPosti > 9)
@@ -289,16 +316,17 @@ export default function ReservationForm() {
               </select>
             </div>
             <div className='mb-3'>
-              <label className='form-label fw-semibold'>Data *</label>
-              <input
-                type='date'
-                name='data'
-                required
-                min={getToday()}
-                max={getEndOfYear()}
+              <label className='form-label fw-semibold d-block'>Data *</label>
+              <DatePicker
+                selected={form.data ? new Date(`${form.data}T00:00:00`) : null}
+                onChange={handleDateChange}
+                minDate={new Date(`${getToday()}T00:00:00`)}
+                maxDate={new Date(`${getEndOfYear()}T00:00:00`)}
+                dateFormat='dd/MM/yyyy'
+                placeholderText='Seleziona una data'
                 className='form-control'
-                value={form.data}
-                onChange={handleChange}
+                wrapperClassName='w-100'
+                required
               />
             </div>
             <div className='mb-3'>
